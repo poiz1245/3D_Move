@@ -31,7 +31,6 @@ public class TopView : MonoBehaviour
 
         Movement(velocityChange);
         Rotation(moveDir);
-
     }
 
     private void Rotation(Vector3 moveDir)
