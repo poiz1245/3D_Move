@@ -35,7 +35,7 @@ public class TopView : MonoBehaviour
 
     private void Rotation(Vector3 moveDir)
     {
-        if (moveDir != Vector3.zero)
+        if (moveDir.x != 0 || moveDir.z != 0)
         {
             Quaternion deltaRotation = Quaternion.LookRotation(moveDir.normalized);
             rigid.MoveRotation(deltaRotation);
