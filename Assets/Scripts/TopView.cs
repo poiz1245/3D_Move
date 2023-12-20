@@ -12,31 +12,38 @@ public class TopView : MonoBehaviour
     [SerializeField] float moveSpeed;
     [SerializeField] float mouseSensitivity;
 
-    float moveX;
-    float moveZ;
+    float horizontalInput;
+    float verticaInput;
 
     void Update()
     {
-        moveX = Input.GetAxisRaw("Horizontal");
-        moveZ = Input.GetAxisRaw("Vertical");
+        horizontalInput = Input.GetAxisRaw("Horizontal");
+        verticaInput = Input.GetAxisRaw("Vertical");
     }
 
 
     private void FixedUpdate()
     {
-        Vector3 moveInput = new Vector3(moveX,0,moveZ);
-        Vector3 targetVelocity = transform.TransformDirection(moveInput) * moveSpeed;
+        Vector3 moveDir = new Vector3(horizontalInput, rigid.velocity.y, verticaInput);
+
+        Vector3 targetVelocity = moveDir * moveSpeed;
         Vector3 velocityChange = (targetVelocity - rigid.velocity);
 
-        Move(velocityChange);
+        Movement(velocityChange);
+        Rotation(moveDir);
+
     }
 
-    private void Rotation(Vector3 deltaRotation)
+    private void Rotation(Vector3 moveDir)
     {
-        rigid.angularVelocity = deltaRotation;
+        if (moveDir != Vector3.zero)
+        {
+            Quaternion deltaRotation = Quaternion.LookRotation(moveDir.normalized);
+            rigid.MoveRotation(deltaRotation);
+        }
     }
 
-    private void Move(Vector3 velocityChange)
+    private void Movement(Vector3 velocityChange)
     {
         rigid.AddForce(velocityChange, ForceMode.VelocityChange);
     }

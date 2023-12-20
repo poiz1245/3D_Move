@@ -12,29 +12,29 @@ public class BasicMove : MonoBehaviour
     [SerializeField] float moveSpeed;
     [SerializeField] float mouseSensitivity;
 
-    float moveX;
-    float moveZ;
-    float rotationY;
+    float horizontalInput;
+    float verticalInput;
+    float yawInput;
 
     void Update()
     {
-        moveX = Input.GetAxisRaw("Horizontal");
-        moveZ = Input.GetAxisRaw("Vertical");
-        rotationY = Input.GetAxis("Mouse X");
+        horizontalInput = Input.GetAxisRaw("Horizontal");
+        verticalInput = Input.GetAxisRaw("Vertical");
+        yawInput = Input.GetAxisRaw("Mouse X");
     }
 
     private void FixedUpdate()
     {
         //Move
-        Vector3 moveInput = new Vector3(moveX, rigid.velocity.y, moveZ);
-        Vector3 targetVelocity = transform.TransformDirection(moveInput) * moveSpeed;
-        Vector3 velocityChange = (targetVelocity - rigid.velocity); //현재속도와 목표속도 사이의 차이 계산
+        Vector3 moveDir = new Vector3(horizontalInput, rigid.velocity.y, verticalInput);
+        Vector3 targetVelocity = transform.TransformDirection(moveDir) * moveSpeed;
+        Vector3 velocityChange = (targetVelocity - rigid.velocity); 
 
         //Rotation
-        Vector3 moveDir = new Vector3(0, rotationY * mouseSensitivity, 0);
-        Quaternion deltaRotation = Quaternion.Euler(moveDir);
+        Vector3 rotationAmount = new Vector3(0, yawInput * mouseSensitivity, 0);
+        Quaternion deltaRotation = Quaternion.Euler(rotationAmount);
 
-        Move(velocityChange);
+        Movement(velocityChange);
         Rotation(deltaRotation);
     }
 
@@ -43,13 +43,13 @@ public class BasicMove : MonoBehaviour
         rigid.MoveRotation(rigid.rotation * deltaRotation);
 
 
-        if (rotationY == 0)
+        if (yawInput == 0)
         {
             rigid.angularVelocity = Vector3.zero;
         }
     }
 
-    private void Move(Vector3 velocityChange)
+    private void Movement(Vector3 velocityChange)
     {
         rigid.AddForce(velocityChange, ForceMode.VelocityChange);
     }
