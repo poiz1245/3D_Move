@@ -21,7 +21,6 @@ public class TopView : MonoBehaviour
         verticaInput = Input.GetAxisRaw("Vertical");
     }
 
-
     private void FixedUpdate()
     {
         Vector3 moveDir = new Vector3(horizontalInput, rigid.velocity.y, verticaInput);
